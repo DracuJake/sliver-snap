@@ -24,6 +24,7 @@ class SnappingAppBarBody extends StatelessWidget {
     this.automaticallyImplyLeading = false,
     this.elevation = 0,
     this.forceElevated = false,
+    this.physics,
   });
 
   final ScrollController scrollController;
@@ -49,6 +50,9 @@ class SnappingAppBarBody extends StatelessWidget {
   final bool forceElevated;
   final double? elevation;
 
+  // add physic
+  final ScrollPhysics? physics;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -57,6 +61,7 @@ class SnappingAppBarBody extends StatelessWidget {
         CustomScrollView(
           controller: scrollController,
           scrollBehavior: scrollBehavior,
+          physics: physics,
           slivers: [
             SliverAppBar(
               actions: actions,
@@ -76,9 +81,7 @@ class SnappingAppBarBody extends StatelessWidget {
                 child: collapsedBar,
               ),
               automaticallyImplyLeading: automaticallyImplyLeading,
-              backgroundColor: isCollapsed
-                  ? collapsedBackgroundColor
-                  : expandedBackgroundColor,
+              backgroundColor: isCollapsed ? collapsedBackgroundColor : expandedBackgroundColor,
               leading: leading,
               flexibleSpace: FlexibleSpaceBar(
                 background: expandedContent,

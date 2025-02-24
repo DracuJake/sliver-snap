@@ -188,7 +188,12 @@ class SliverSnap extends HookWidget {
   /// Defaults to `0.0`
   final double elevation;
 
-  const SliverSnap({
+  /// scroll physic
+  final ScrollPhysics? physics;
+
+  final bool fadeAnimation;
+
+  const SliverSnap( {
     super.key,
     required this.expandedContent,
     required this.collapsedContent,
@@ -213,6 +218,8 @@ class SliverSnap extends HookWidget {
     this.automaticallyImplyLeading = false,
     this.forceElevated = false,
     this.elevation = 0.0,
+    this.physics,
+    this.fadeAnimation = true,
   });
 
   @override
@@ -242,10 +249,11 @@ class SliverSnap extends HookWidget {
             controller.offset,
             controller.position.maxScrollExtent,
           );
-
           scrollPercentValueNotifier.value = 1 - scrollingOffset / maxExtent;
-          animatedOpacity.value =
-              _calculateOpacity(scrollPercentValueNotifier.value);
+          if (fadeAnimation) {
+            animatedOpacity.value =
+                _calculateOpacity(scrollPercentValueNotifier.value);
+          }
         },
         scrollController: controller,
       ),
@@ -254,11 +262,11 @@ class SliverSnap extends HookWidget {
         backdropWidget: backdropWidget,
         collapsedBar: collapsedContent,
         bottom: bottom,
-        expandedContent: AnimatedOpacity(
+        expandedContent: fadeAnimation ? AnimatedOpacity(
           duration: const Duration(milliseconds: 200),
           opacity: animatedOpacity.value,
           child: expandedContent,
-        ),
+        ) : expandedContent,
         leading: leading,
         actions: actions,
         pinned: pinned,
@@ -275,6 +283,7 @@ class SliverSnap extends HookWidget {
         isCollapsed: isCollapsedValueNotifier.value,
         forceElevated: forceElevated,
         elevation: elevation,
+        physics: physics,
       ),
     );
   }
